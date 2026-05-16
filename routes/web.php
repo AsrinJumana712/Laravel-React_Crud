@@ -13,6 +13,7 @@ Route::middleware(['auth'])->group(function () {
     })->name('dashboard');
 
     Route::get('/products', [\App\Http\Controllers\ProductController::class, 'index'])->name('products.index');
+    Route::get('/products/create', [\App\Http\Controllers\ProductController::class, 'create'])->name('products.create');
 });
 
 require __DIR__.'/settings.php';
