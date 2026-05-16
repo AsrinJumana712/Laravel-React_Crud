@@ -76,7 +76,8 @@ export default function Index() {
                                 <TableCell>{product.name}</TableCell>
                                 <TableCell>{product.price.toFixed(2)}</TableCell>
                                 <TableCell>{product.description}</TableCell>
-                                <TableCell className="text-center">
+                                <TableCell className="text-center space-x-2">
+                                    <Button className='bg-slate-600 hover:bg-slate-700'>Edit</Button>
                                     <Button disabled={processing} onClick={() => handleDelete(product.id, product.name)} className='bg-red-500 hover:bg-red-700'>Delete</Button>
                                 </TableCell>
                             </TableRow>
