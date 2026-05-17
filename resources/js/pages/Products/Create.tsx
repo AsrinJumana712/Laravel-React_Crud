@@ -18,7 +18,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function Index() {
 
-    const { data, setData, post, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         name: "",
         price: "",
         description: "",
@@ -61,7 +61,7 @@ export default function Index() {
                         <Label htmlFor="product description">Description</Label>
                         <Textarea id="product description" placeholder="Product Description" value={data.description} onChange={(e) => setData('description', e.target.value)} />
                     </div>
-                    <Button className="mt-4" type="submit">Add Product</Button>
+                    <Button className="mt-4" type="submit" disabled={processing}>Add Product</Button>
                 </form>
             </div>
         </AppLayout>
