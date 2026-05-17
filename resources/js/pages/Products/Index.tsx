@@ -31,7 +31,7 @@ export default function Index() {
 
     const { products, flash } = usePage().props as PageProps;
 
-    const { submit, get, post, put, patch, delete: destroy, processing } = useForm();
+    const { delete: destroy, processing } = useForm();
 
     const handleDelete = (id: number, name: string) => {
         if (confirm(`Are you sure you want to delete the product - ${id}. ${name}`)) {
@@ -57,7 +57,7 @@ export default function Index() {
                 )}
             </div>
             {products.length > 0 && (
-                <div className="w-8/12 p-4">
+                <div className="m-4">
                     <Table>
                         <TableCaption>A list of your recent products.</TableCaption>
                         <TableHeader>
@@ -77,7 +77,9 @@ export default function Index() {
                                 <TableCell>{product.price.toFixed(2)}</TableCell>
                                 <TableCell>{product.description}</TableCell>
                                 <TableCell className="text-center space-x-2">
-                                    <Button className='bg-slate-600 hover:bg-slate-700'>Edit</Button>
+                                    <Button className='bg-slate-600 hover:bg-slate-700' asChild>
+                                        <Link href={route('products.edit', product.id)}>Edit</Link>
+                                    </Button>
                                     <Button disabled={processing} onClick={() => handleDelete(product.id, product.name)} className='bg-red-500 hover:bg-red-700'>Delete</Button>
                                 </TableCell>
                             </TableRow>
