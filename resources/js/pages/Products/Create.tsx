@@ -1,68 +1,126 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Textarea } from "@/components/ui/textarea"
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from '@/components/ui/button';
-import { useForm } from "@inertiajs/react";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { CircleAlert } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CircleAlert, PackagePlus } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Create a new Product',
+        title: 'Create Product',
         href: '/products/create',
     },
 ];
 
-export default function Index() {
+export default function Create() {
 
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors} = useForm({
         name: "",
         price: "",
         description: "",
+        quantity: "",
+        image: null as File | null,
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('products.store'));
+
+        post(route('products.store'), {
+            forceFormData: true,
+        });
     };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Create Product" />
+            <div className="flex justify-center px-4 py-8">
+                <Card className="w-full max-w-2xl shadow-xl border-0 rounded-2xl">
+                    <CardHeader className="space-y-2">
+                        <div className="flex items-center gap-2">
+                            <PackagePlus className="h-6 w-6 text-primary" />
+                            <CardTitle className="text-2xl"> Create New Product </CardTitle>
+                        </div>
 
-            <div className="w-8/12 p-4">
-                <form onSubmit={handleSubmit} className="space-y-4">
+                        <CardDescription> Add a new product to your catalog with image, name, price, quantity, and description. </CardDescription>
+                    </CardHeader>
 
-                    {/* Displaying errors if any */}
-                    {Object.keys(errors).length > 0 && (
-                        <Alert>
-                            <CircleAlert className="h-4 w-4" />
-                            <AlertTitle>Heads up!</AlertTitle>
-                            <AlertDescription>
-                                {Object.entries(errors).map(([key, message]) => (
-                                    <li key={key}>{message as string}</li>
-                                ))}
-                            </AlertDescription>
-                        </Alert>
-                    )}
+                    <CardContent>
+                        {/* Error Alert */}
+                        {Object.keys(errors).length > 0 && (
+                            <Alert variant="destructive" className="mb-6" >
+                                <CircleAlert className="h-4 w-4" />
+                                <AlertTitle>  Validation Error </AlertTitle>
+                                <AlertDescription>
+                                    <ul className="list-disc pl-5 space-y-1">
+                                        {Object.entries(errors).map(([key, message]) => (
+                                            <li key={key}> {message as string} </li>
+                                        ))}
+                                    </ul>
+                                </AlertDescription>
+                            </Alert>
+                        )}
 
-                    <div className="gap-1.5">
-                        <Label htmlFor="product name">Name</Label>
-                        <Input id="product name" type="text" placeholder="Product Name" value={data.name} onChange={(e) => setData('name', e.target.value)} />
-                    </div>
-                    <div>
-                        <Label htmlFor="product price">Price</Label>
-                        <Input id="product price" type="text" placeholder="Price" value={data.price} onChange={(e) => setData('price', e.target.value)} />
-                    </div>
-                    <div>
-                        <Label htmlFor="product description">Description</Label>
-                        <Textarea id="product description" placeholder="Product Description" value={data.description} onChange={(e) => setData('description', e.target.value)} />
-                    </div>
-                    <Button className="mt-4" type="submit" disabled={processing}>Add Product</Button>
-                </form>
+                        <form onSubmit={handleSubmit} className="space-y-6" >
+
+                            {/* Product Name */}
+                            <div className="space-y-2">
+                                <Label htmlFor="product-name"> Product Name </Label>
+                                <Input id="product-name" type="text" placeholder="Enter product name"
+                                    value={data.name}
+                                    onChange={(e) => setData('name', e.target.value)}
+                                    className="h-11"/>
+                            </div>
+
+                            {/* Product Price */}
+                            <div className="space-y-2">
+                                <Label htmlFor="product-price"> Product Price </Label>
+                                <Input id="product-price" type="number" placeholder="Enter product price"
+                                    value={data.price}
+                                    onChange={(e) => setData('price', e.target.value)}
+                                    className="h-11" />
+                            </div>
+
+                            {/* Product Description */}
+                            <div className="space-y-2">
+                                <Label htmlFor="product-description"> Product Description </Label>
+                                <Textarea id="product-description" placeholder="Write product description..."
+                                    value={data.description}
+                                    onChange={(e) => setData('description', e.target.value)}
+                                    className="min-h-[120px]"/>
+                            </div>
+
+                            {/* Product Quantity */}
+                            <div className="space-y-2">
+                                <Label htmlFor="product-quantity"> Product Quantity </Label>
+                                <Input id="product-quantity" type="number" placeholder="Enter product quantity"
+                                    value={data.quantity}
+                                    onChange={(e) => setData('quantity', e.target.value)}
+                                    className="h-11"/>
+                            </div>
+
+                            {/* Product Image Upload */}
+                            <div className="space-y-2">
+                                <Label htmlFor="product-image"> Product Image </Label>
+                                <Input id="product-image" type="file" accept="image/*"
+                                    onChange={(e) =>
+                                        setData('image', e.target.files?.[0] || null)} />
+                            </div>
+
+                            {/* Submit Button */}
+                            <div className="flex justify-end">
+                                <Button type="submit" disabled={processing} className="px-6 h-11 rounded-xl">
+                                    {processing
+                                        ? 'Adding Product...'
+                                        : 'Add Product'}
+                                </Button>
+                            </div>
+                        </form>
+                    </CardContent>
+                </Card>
             </div>
         </AppLayout>
     );
